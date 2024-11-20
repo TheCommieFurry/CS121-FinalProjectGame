@@ -19,17 +19,22 @@ import java.util.Iterator;
 public class Room 
 {
     private String description;
-    private HashMap<String, Room> exits;        // stores exits of this room.
-
+    private int numEnemies;
+    private boolean isExit;
+    
+    private HashMap<String, Room> exits;// stores exits of this room.
+    
     /**
      * Create a room described "description". Initially, it has
      * no exits. "description" is something like "a kitchen" or
      * "an open court yard".
      * @param description The room's description.
      */
-    public Room(String description) 
+    public Room(String description, int numEnemies, boolean isExit) 
     {
         this.description = description;
+        this.numEnemies = numEnemies;
+        this.isExit = isExit;
         exits = new HashMap<>();
     }
 
@@ -76,6 +81,22 @@ public class Room
     public Room getExit(String direction) 
     {
         return exits.get(direction);
+    }
+    
+    //GETTERS AND SETTERS!!!!!!!!!!
+    public boolean gIsExit()
+    {
+        return isExit;
+    }
+    
+    public int gNumEnemies()
+    {
+        return numEnemies;
+    }
+    
+    public void sNumEnemies(int numEnemies)
+    {
+        this.numEnemies = numEnemies;
     }
 }
 

@@ -15,6 +15,7 @@ public class Player
     private int health;
     private int maxHealth;
     private String name;
+    private String description;
     
     //default constructor
     public Player()
@@ -27,6 +28,20 @@ public class Player
         health = 100;
         maxHealth = 100;
         name = "Chara";
+    }
+    
+    //OVERLOADED CONSTRUCTORRRRRRRRRRRRRRRRR!!!!!!!!!!!!!!!!!!!!!!!!!!
+    public Player(int strength, int agility, int luck, int sanity, int maxSanity, int health, int maxHealth, String name, String description)
+    {
+        this.strength = strength;
+        this.agility = agility;
+        this.luck = luck;
+        this.sanity = sanity;
+        this.maxSanity = maxSanity;
+        this.health = health;
+        this.maxHealth = maxHealth;
+        this.name = name;
+        this.description = description;
     }
     
     //GETTERS!!!!!!!!!
@@ -63,6 +78,16 @@ public class Player
     public int gMaxHealth()
     {
         return maxHealth;
+    }
+    
+    public String gName()
+    {
+        return name;
+    }
+    
+    public String gDescription()
+    {
+        return description;
     }
     
     //SETTERS!!!!!
