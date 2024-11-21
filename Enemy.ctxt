@@ -1,4 +1,20 @@
 #BlueJ class context
 comment0.target=Enemy
 comment0.text=\n\ Write\ a\ description\ of\ class\ Enemy\ here.\n\n\ @author\ (your\ name)\n\ @version\ (a\ version\ number\ or\ a\ date)\n
-numComments=1
+comment1.params=
+comment1.target=Enemy()
+comment2.params=health\ dodge\ damage\ name
+comment2.target=Enemy(int,\ int,\ int,\ java.lang.String)
+comment3.params=
+comment3.target=int\ gHealth()
+comment4.params=
+comment4.target=int\ gDodge()
+comment5.params=
+comment5.target=int\ gDamage()
+comment6.params=
+comment6.target=java.lang.String\ gName()
+comment7.params=health
+comment7.target=void\ sHealth(int)
+comment8.params=
+comment8.target=void\ printEnemyStats()
+numComments=9

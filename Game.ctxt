@@ -8,6 +8,7 @@ comment10.target=void\ characterPicker()
 comment10.text=\n\ Chooses\ a\ character\ and\ then\ sets\ the\ current\ player\ character\ to\ the\ inputted\ one\n
 comment11.params=
 comment11.target=void\ combat()
+comment11.text=\n\ Supposed\ to\ be\ the\ combat\ interface\ and\ stuff\n
 comment12.params=
 comment12.target=boolean\ hasHealth()
 comment13.params=

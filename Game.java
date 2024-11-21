@@ -27,16 +27,21 @@
  * __Started adding items
  * __Started work on inventory system
  * 
+ * 11.20.2024.2
+ * __Started on combat
+ * __Started on enemies
+ * __cannot figure out how random works
+ * 
  * @author Gage R
  * @version 11.14.2024
  */
 
-import java.util.Scanner;
-import java.util.ArrayList;
+import java.util.*;
 
 public class Game 
 {
     private java.util.Scanner reader;
+    private Random rand;
     private Parser parser;
     private Room currentRoom;
     private Item currentWeapon;
@@ -46,12 +51,18 @@ public class Game
     private int killCounter; //kill counter for the player
     private boolean isDead; //if the player is dead or not
     private Item[] inventory; //inventory
+    private Item lastWeapon;
+
+    //enemies
+    private Enemy enemy;
+    private Enemy specialEnemy;
 
     //items
-    Item fists;
-    Item drugs;
-    
-    
+    private Item fists;
+    private Item drugs;
+    private Item dullKnife;
+    private Item dullestKnife;
+
     private boolean finished; //checks if the game is finished
 
     /**
@@ -64,9 +75,10 @@ public class Game
         parser = new Parser();
         reader = new java.util.Scanner(System.in);
         currentWeapon = fists;
-        
-        
+
         inventory[0] = drugs;
+        inventory[1] = dullKnife;
+        inventory[2] = dullestKnife;
     }
 
     /**
@@ -114,9 +126,11 @@ public class Game
     {   
         //item items
         drugs = new Item(25, 25, 0, 0, false, false, true, "drugs", "some drugs");
-        
+
         //weapon items
         fists = new Item(0, 0, 0, 0, true, false, false, "fists", "its all you've got");
+        dullKnife = new Item(0, 0, 0, 10, true, false, false, "dull knife", "better than nothing i guess");
+        dullestKnife = new Item(0, 0, 0, -2, true, false, false, "dullest knife", "worse than nothing");
     }
 
     /**
@@ -136,6 +150,10 @@ public class Game
             Command command = parser.getCommand();
             finished = processCommand(command);
             hasHealth();
+            if(currentRoom.gNumEnemies() > 0)
+            {
+                combat();
+            }
             if(currentRoom.gIsExit() == true)
             {
                 finished = true;
@@ -283,9 +301,41 @@ public class Game
         }while(correct == false);
     }
 
-    private void combat()
+    /**
+     * Supposed to be the combat interface and stuff
+     */
+    public void combat()
     {
+        //enemy = new Enemy((rand.nextInt(10) + 1)*10, rand.nextInt(10) + 1, rand.nextInt(10) + 1, "Enemy");
+        enemy = new Enemy(100, 10, 5, "loser");
+        enemy.printEnemyStats();
 
+        boolean combatOver = false;
+        do{
+            System.out.println("What would you like to do?");
+            System.out.println("Fight   Item   Run");
+            String option = reader.nextLine();
+            switch(option.toLowerCase())
+            {
+                case "fight":
+                    int chanceHitRoll = rand.nextInt((player.gAgility()) + 3);
+                    if(rand.nextInt(enemy.gDodge()) < chanceHitRoll)
+                    {
+                        int playerDamageRoll = rand.nextInt((player.gStrength() / 2)) + currentWeapon.gDamageMod();
+                        enemy.sHealth(enemy.gHealth() - playerDamageRoll);
+                        System.out.println("HIT! You did " + playerDamageRoll + " damage!");
+                    }
+                    else
+                    {
+                        System.out.println("You swung but missed!");
+                    }
+                    break;
+                case "item":
+                    break;
+                case "run":
+                    break;
+            }
+        }while(combatOver == true);
     }
 
     private boolean hasHealth()
@@ -311,14 +361,14 @@ public class Game
 
         System.out.println("=== INVENTORY ===");
         System.out.println();
-        
+
         System.out.println("Current Weapon = " + currentWeapon.gName() + " - " + currentWeapon.gDescription());
         System.out.println();
-        
+
         printInventory();
         usingInventory();
     }
-    
+
     /**
      * Prints the players inventory, if a space is blank it will display "- - -"
      */
@@ -339,7 +389,7 @@ public class Game
             num++;
         }
     }
-    
+
     /**
      * The inventory UI and where you pick what item to use
      */
@@ -347,7 +397,7 @@ public class Game
     {
         System.out.println();
         System.out.println("Input the number of the object you want to use or type 'back'");
-        
+
         boolean done = false;
         do{
             String option = reader.nextLine();
@@ -355,51 +405,124 @@ public class Game
             {
                 case "1":
                     useItem(inventory[0]);
-                    inventory[0] = null;
+                    if(inventory[0].gIsWeapon() == true)
+                    {
+                        inventory[0] = lastWeapon;
+                    }
+                    else
+                    {
+                        inventory[0] = null;
+                    }
                     break;
                 case "2":
                     useItem(inventory[1]);
-                    inventory[1] = null;
+                    if(inventory[1].gIsWeapon() == true)
+                    {
+                        inventory[1] = lastWeapon;
+                    }
+                    else
+                    {
+                        inventory[1] = null;
+                    }
                     break;
                 case "3":
                     useItem(inventory[2]);
-                    inventory[2] = null;
+                    if(inventory[2].gIsWeapon() == true)
+                    {
+                        inventory[2] = lastWeapon;
+                    }
+                    else
+                    {
+                        inventory[2] = null;
+                    }
                     break;
                 case "4":
                     useItem(inventory[3]);
-                    inventory[3] = null;
+                    if(inventory[3].gIsWeapon() == true)
+                    {
+                        inventory[3] = lastWeapon;
+                    }
+                    else
+                    {
+                        inventory[3] = null;
+                    }
                     break;
                 case "5":
                     useItem(inventory[4]);
-                    inventory[4] = null;
+                    if(inventory[4].gIsWeapon() == true)
+                    {
+                        inventory[4] = lastWeapon;
+                    }
+                    else
+                    {
+                        inventory[4] = null;
+                    }
                     break;
                 case "6":
                     useItem(inventory[5]);
-                    inventory[5] = null;
+                    if(inventory[5].gIsWeapon() == true)
+                    {
+                        inventory[5] = lastWeapon;
+                    }
+                    else
+                    {
+                        inventory[5] = null;
+                    }
                     break;
                 case "7":
                     useItem(inventory[6]);
-                    inventory[6] = null;
+                    if(inventory[6].gIsWeapon() == true)
+                    {
+                        inventory[6] = lastWeapon;
+                    }
+                    else
+                    {
+                        inventory[6] = null;
+                    }
                     break;
                 case "8":
                     useItem(inventory[7]);
-                    inventory[7] = null;
+                    if(inventory[7].gIsWeapon() == true)
+                    {
+                        inventory[7] = lastWeapon;
+                    }
+                    else
+                    {
+                        inventory[7] = null;
+                    }
                     break;
                 case "9":
                     useItem(inventory[8]);
-                    inventory[8] = null;
+                    if(inventory[8].gIsWeapon() == true)
+                    {
+                        inventory[8] = lastWeapon;
+                    }
+                    else
+                    {
+                        inventory[8] = null;
+                    }
                     break;
                 case "10":
                     useItem(inventory[9]);
-                    inventory[9] = null;
+                    if(inventory[9].gIsWeapon() == true)
+                    {
+                        inventory[9] = lastWeapon;
+                    }
+                    else
+                    {
+                        inventory[9] = null;
+                    }
                     break;
                 case "back":
                     done = true;
                     break;
+                default:
+                    System.out.println("Try again");
+                    break;
             }
         }while(done == false);
     }
-    
+
     /**
      * Uses the item selected 
      *  - if weapon it switches the chosen item to your selected inventory weapon
@@ -412,9 +535,17 @@ public class Game
         if(selectedItem != null)
         {
             player.sHealth(player.gHealth() + selectedItem.gHealthMod());
-            
+
             if(selectedItem.gIsWeapon() == true)
             {
+                if(currentWeapon.gName() != "fists" || currentWeapon.gName() == null)
+                {
+                    lastWeapon = currentWeapon;
+                }
+                else
+                {
+                    lastWeapon = null;
+                }
                 currentWeapon = selectedItem;
                 System.out.println("Weapon equiped!");
             }
